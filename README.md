@@ -25,6 +25,7 @@ O `.env` tem a URL da API do GitHub (`VITE_GITHUB_API_URL`).
 - `npm run preview`: abre o build localmente
 - `npm run lint`: roda o ESLint
 - `npm run typecheck`: verifica os tipos
+- `npm run deploy`: gera o build e publica no Firebase Hosting
 
 ## Rotas
 
@@ -34,4 +35,4 @@ O `.env` tem a URL da API do GitHub (`VITE_GITHUB_API_URL`).
 
 ## Deploy
 
-Link: _(em breve)_
+https://github-user-explore-lg.web.app
