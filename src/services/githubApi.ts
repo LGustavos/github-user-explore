@@ -58,4 +58,4 @@ const getRepository = async (
 const isNotFound = (error: unknown): boolean =>
   axios.isAxiosError(error) && error.response?.status === 404
 
-export { getUser, getUserRepos, getRepository, isNotFound }
+export { getUser, getUserRepos, getRepository, getLastPage, isNotFound }

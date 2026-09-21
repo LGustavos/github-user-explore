@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { Link, useParams } from 'react-router'
-import { getUser, getUserRepos, isNotFound } from '../services/githubApi.ts'
+import { getUser, getUserRepos } from '../services/githubApi.ts'
 import useRequest from '../hooks/useRequest.ts'
 import {
   ArrowLeftIcon,
@@ -9,18 +9,23 @@ import {
   RepositoryList,
   UserProfile
 } from '../components/index.ts'
+import { describeError } from '../utils/requestError.ts'
 
 const UserPage = () => {
   const { username = '' } = useParams()
 
   const fetchUser = useCallback(
-    (signal: AbortSignal) =>
-      Promise.all([getUser(username, signal), getUserRepos(username, signal)]),
+    async (signal: AbortSignal) => {
+      const [user, repositories] = await Promise.all([
+        getUser(username, signal),
+        getUserRepos(username, signal)
+      ])
+      return { user, repositories }
+    },
     [username]
   )
 
   const { status, data, error, retry } = useRequest(fetchUser)
-  const notFound = isNotFound(error)
 
   return (
     <div>
@@ -34,12 +39,10 @@ const UserPage = () => {
 
       {status === 'error' && (
         <ErrorMessage
-          title={notFound ? 'Usuário não encontrado' : 'Falha ao carregar dados'}
-          message={
-            notFound
-              ? `Nenhum usuário com o nome "${username}".`
-              : 'Não foi possível se comunicar com a API do GitHub.'
-          }
+          {...describeError(error, {
+            title: 'Usuário não encontrado',
+            message: `Nenhum usuário com o nome "${username}".`
+          })}
           onRetry={retry}
         />
       )}
@@ -47,10 +50,10 @@ const UserPage = () => {
       {status === 'success' && data && (
         <div className="row g-4 g-lg-5">
           <div className="col-12 col-md-5 col-lg-4 col-xl-3">
-            <UserProfile user={data[0]} />
+            <UserProfile user={data.user} />
           </div>
           <div className="col-12 col-md-7 col-lg-8 col-xl-9">
-            <RepositoryList repositories={data[1]} />
+            <RepositoryList repositories={data.repositories} />
           </div>
         </div>
       )}

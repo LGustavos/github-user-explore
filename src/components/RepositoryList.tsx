@@ -2,27 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import RepositoryCard from './RepositoryCard.tsx'
 import RepositorySort from './RepositorySort.tsx'
 import type { SortMode } from './RepositorySort.tsx'
+import { sortRepositories } from '../utils/sortRepositories.ts'
 import type { GitHubRepository } from '../types/github.ts'
 
 const PAGE_SIZE = 10
 const PRELOAD_MARGIN = '0px 0px 200px 0px'
-
-const sortRepositories = (
-  repositories: GitHubRepository[],
-  mode: SortMode
-): GitHubRepository[] => {
-  const list = [...repositories]
-  switch (mode) {
-    case 'stars-desc':
-      return list.sort((a, b) => b.stargazers_count - a.stargazers_count)
-    case 'stars-asc':
-      return list.sort((a, b) => a.stargazers_count - b.stargazers_count)
-    case 'name-asc':
-      return list.sort((a, b) => a.name.localeCompare(b.name))
-    case 'name-desc':
-      return list.sort((a, b) => b.name.localeCompare(a.name))
-  }
-}
 
 interface RepositoryListProps {
   repositories: GitHubRepository[]

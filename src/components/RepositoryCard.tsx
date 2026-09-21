@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import { Link } from 'react-router'
 import { ForkIcon, StarIcon } from './icons.tsx'
+import { formatNumber } from '../utils/format.ts'
 import { languageColor } from '../utils/languageColors.ts'
 import type { GitHubRepository } from '../types/github.ts'
 
@@ -23,10 +24,10 @@ const RepositoryCard = ({ repository }: RepositoryCardProps) => {
         <div className="repo-row-meta d-flex flex-row flex-lg-column align-items-lg-end gap-3 gap-lg-1">
           <span className="d-inline-flex align-items-center gap-1" title="Estrelas">
             <StarIcon size={13} className="star-icon" />{' '}
-            {stargazers_count.toLocaleString('pt-BR')}
+            {formatNumber(stargazers_count)}
           </span>
           <span className="d-inline-flex align-items-center gap-1" title="Forks">
-            <ForkIcon size={13} /> {forks_count.toLocaleString('pt-BR')}
+            <ForkIcon size={13} /> {formatNumber(forks_count)}
           </span>
           {language && (
             <span className="d-inline-flex align-items-center gap-2">

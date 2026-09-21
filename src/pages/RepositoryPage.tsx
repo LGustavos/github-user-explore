@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
-import { getRepository, isNotFound } from '../services/githubApi.ts'
+import { getRepository } from '../services/githubApi.ts'
 import useRequest from '../hooks/useRequest.ts'
 import {
   ArrowLeftIcon,
@@ -11,7 +11,9 @@ import {
   StarIcon
 } from '../components/index.ts'
 import { avatarUrl } from '../utils/avatar.ts'
+import { formatNumber } from '../utils/format.ts'
 import { languageColor } from '../utils/languageColors.ts'
+import { describeError } from '../utils/requestError.ts'
 
 const RepositoryPage = () => {
   const { owner = '', repo = '' } = useParams()
@@ -24,7 +26,6 @@ const RepositoryPage = () => {
   )
 
   const { status, data: repository, error, retry } = useRequest(fetchRepository)
-  const notFound = isNotFound(error)
 
   const handleBack = () => {
     if (location.key === 'default') {
@@ -55,12 +56,10 @@ const RepositoryPage = () => {
 
       {status === 'error' && (
         <ErrorMessage
-          title={notFound ? 'Repositório não encontrado' : 'Falha ao carregar'}
-          message={
-            notFound
-              ? `Não encontramos "${owner}/${repo}".`
-              : 'Não foi possível se comunicar com a API do GitHub.'
-          }
+          {...describeError(error, {
+            title: 'Repositório não encontrado',
+            message: `Não encontramos "${owner}/${repo}".`
+          })}
           onRetry={retry}
         />
       )}
@@ -105,7 +104,7 @@ const RepositoryPage = () => {
               <p className="eyebrow mb-2">Estrelas</p>
               <p className="stat-number mono mb-0 d-flex align-items-center gap-2">
                 <StarIcon size={18} className="star-icon" />
-                {repository.stargazers_count.toLocaleString('pt-BR')}
+                {formatNumber(repository.stargazers_count)}
               </p>
             </div>
 
@@ -113,7 +112,7 @@ const RepositoryPage = () => {
               <p className="eyebrow mb-2">Forks</p>
               <p className="stat-number mono mb-0 d-flex align-items-center gap-2">
                 <ForkIcon size={18} />
-                {repository.forks_count.toLocaleString('pt-BR')}
+                {formatNumber(repository.forks_count)}
               </p>
             </div>
 

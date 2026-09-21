@@ -1,5 +1,6 @@
 import { ExternalLinkIcon } from './icons.tsx'
 import { avatarUrl } from '../utils/avatar.ts'
+import { formatNumber } from '../utils/format.ts'
 import type { GitHubUser } from '../types/github.ts'
 
 interface UserProfileProps {
@@ -27,11 +28,11 @@ const UserProfile = ({ user }: UserProfileProps) => {
       <dl className="spec-list mb-3">
         <div className="spec-row">
           <dt className="spec-label">Seguidores</dt>
-          <dd className="spec-value mb-0">{user.followers.toLocaleString('pt-BR')}</dd>
+          <dd className="spec-value mb-0">{formatNumber(user.followers)}</dd>
         </div>
         <div className="spec-row">
           <dt className="spec-label">Seguindo</dt>
-          <dd className="spec-value mb-0">{user.following.toLocaleString('pt-BR')}</dd>
+          <dd className="spec-value mb-0">{formatNumber(user.following)}</dd>
         </div>
         {user.email && (
           <div className="spec-row">
